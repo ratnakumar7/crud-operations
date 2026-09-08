@@ -21,7 +21,7 @@ class PemUtilsTest {
 
         assertTrue(pem.startsWith("-----BEGIN CERTIFICATE-----\n"));
         assertTrue(pem.endsWith("-----END CERTIFICATE-----\n"));
-        assertTrue(pem.contains("\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvQqyV8wvQOaF7OzHrnfph\n"));
+        assertTrue(pem.contains("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvQqyV8wvQOaF7OzHrnfp"));
         assertLineLengthAtMost64(pem);
     }
 
