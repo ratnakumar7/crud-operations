@@ -1,0 +1,75 @@
+# OpenSSL config for a local RADIUS TLS test PKI (CA, server, client).
+# Not for production.
+
+[ ca ]
+default_ca = CA_default
+
+[ CA_default ]
+dir               = ./generated
+certs             = $dir
+new_certs_dir     = $dir/ca/newcerts
+database          = $dir/ca/index.txt
+serial            = $dir/ca/serial
+RANDFILE          = $dir/ca/.rand
+private_key       = $dir/ca/ca.key
+certificate       = $dir/ca/ca.crt
+default_days      = 365
+default_md        = sha256
+preserve          = no
+policy            = policy_loose
+copy_extensions   = copy
+unique_subject    = no
+
+[ policy_loose ]
+countryName             = optional
+stateOrProvinceName     = optional
+organizationName        = optional
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
+
+[ req ]
+default_bits        = 2048
+default_md          = sha256
+prompt              = no
+distinguished_name  = dn
+x509_extensions     = v3_ca
+
+[ dn ]
+C  = US
+ST = Test
+L  = Lab
+O  = RADIUS Test
+CN = RADIUS Test CA
+
+[ v3_ca ]
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints       = critical, CA:true
+keyUsage               = critical, digitalSignature, cRLSign, keyCertSign
+
+[ v3_server ]
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid,issuer
+basicConstraints       = CA:FALSE
+keyUsage               = critical, digitalSignature, keyEncipherment
+extendedKeyUsage       = serverAuth, clientAuth
+subjectAltName         = @server_san
+
+[ v3_client ]
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid,issuer
+basicConstraints       = CA:FALSE
+keyUsage               = critical, digitalSignature, keyEncipherment
+extendedKeyUsage       = clientAuth
+subjectAltName         = @client_san
+
+[ server_san ]
+DNS.1 = localhost
+DNS.2 = radius.local
+IP.1  = 127.0.0.1
+IP.2  = ::1
+
+[ client_san ]
+DNS.1 = client.radius.local
+email.1 = user@radius.local
